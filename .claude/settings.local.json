@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(perl -pi -e 's/any \\\\\\(select public\\\\.user_tenant_ids\\\\\\(\\\\\\)\\\\\\)/any \\(public.user_tenant_ids\\(\\)\\)/g' 20260810000500_rls.sql)",
+      "Bash(python3 -)",
+      "Bash(sed -i '' \"s/values \\(:'tenant_a', 'pos', 'draft', 'DRAFT-1', 'MMK'/values \\(:'tenant_a', 'pos', 'draft', null, 'MMK'/\" /private/tmp/claude-501/-Users-imac5656-Desktop-Main-project/db07d5e4-639f-4d74-8c8e-767a22bb4ade/scratchpad/rls_test.sql)",
+      "Bash(npm install *)",
+      "Bash(npx tsc *)",
+      "Bash(node -e ' *)",
+      "Bash(npm run *)",
+      "Bash(echo \"typecheck exit=$?\")",
+      "Bash(npx next *)",
+      "Bash(python3 -c ' *)",
+      "Bash(curl -s -m 5 -o /dev/null -w \"3000 /login: %{http_code}\\\\n\" http://127.0.0.1:3000/login)",
+      "Bash(curl -s -m 5 -o /dev/null -w \"3000 /accept-invite: %{http_code}\\\\n\" \"http://127.0.0.1:3000/accept-invite?token=nope\")",
+      "Bash(ipconfig getifaddr *)"
+    ]
+  }
+}

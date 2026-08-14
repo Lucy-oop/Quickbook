@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Myanmar ERP">
+  <rect width="512" height="512" fill="#2a78d6"/>
+  <g transform="translate(102 102) scale(0.6)" fill="none" stroke="#ffffff" stroke-width="40" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M128 208h256v192a16 16 0 0 1-16 16H144a16 16 0 0 1-16-16z"/>
+    <path d="M112 208l32-96h224l32 96"/>
+    <path d="M224 416v-96h64v96"/>
+  </g>
+</svg>

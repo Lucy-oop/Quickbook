@@ -1,0 +1,50 @@
+{
+  "name": "Myanmar ERP — Business Management",
+  "short_name": "Myanmar ERP",
+  "description": "Multi-tenant ERP, POS and accounting for businesses in Myanmar.",
+  "start_url": "/dashboard",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#ffffff",
+  "theme_color": "#2a78d6",
+  "lang": "my",
+  "dir": "ltr",
+  "categories": [
+    "business",
+    "finance",
+    "productivity"
+  ],
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-maskable.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Point of Sale",
+      "short_name": "POS",
+      "url": "/pos",
+      "description": "Ring up a sale"
+    },
+    {
+      "name": "Stock In",
+      "short_name": "Stock In",
+      "url": "/inventory/stock-in"
+    },
+    {
+      "name": "Dashboard",
+      "short_name": "Dashboard",
+      "url": "/dashboard"
+    }
+  ]
+}

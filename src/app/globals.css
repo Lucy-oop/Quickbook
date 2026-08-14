@@ -1,0 +1,222 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  /* ── Surface elevation ──────────────────────────────────────────────────
+     Three levels, and they must stay distinguishable in that order:
+       background  page ground
+       card        panels sitting on the ground
+       popover     menus/modals floating above panels
+     In light mode all three are white and separation comes from the hairline
+     border plus shadow. In dark mode a shadow is invisible, so separation has
+     to come from lightness — hence the genuinely different dark values below. */
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 240 10% 4%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 4%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 4%;
+    --primary: 221 83% 53%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 240 5% 96%;
+    --secondary-foreground: 240 6% 10%;
+    --muted: 240 5% 96%;
+    --muted-foreground: 240 4% 46%;
+    --accent: 240 5% 96%;
+    --accent-foreground: 240 6% 10%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 6% 90%;
+    --input: 240 6% 90%;
+    --ring: 221 83% 53%;
+    --radius: 0.625rem;
+
+    /* Hairlines carry alpha, so they cannot be `hsl(var(--x))` triples like the
+       tokens above — they are whole colors. This is what makes one card class
+       (`border-hairline hover:border-hairline-strong`) read correctly on every
+       surface in both themes instead of needing a dark: variant per component. */
+    --hairline: rgb(9 9 11 / 0.10);
+    --hairline-strong: rgb(9 9 11 / 0.18);
+    /* Faint wash for table row hover and inset wells. */
+    --overlay-subtle: rgb(9 9 11 / 0.03);
+    --overlay-hover: rgb(9 9 11 / 0.06);
+
+    /* ── Chart tokens ────────────────────────────────────────────────
+       Validated categorical slots (see components/charts/chart-tokens.ts).
+       Light: worst adjacent CVD ΔE 24.7, normal-vision ΔE 33.6, both ≥3:1. */
+    --chart-1: #2a78d6;
+    --chart-2: #eb6834;
+    --chart-3: #1baf7a;
+    --chart-grid: hsl(240 6% 90%);
+    --chart-axis: hsl(240 5% 65%);
+    --chart-surface: #ffffff;
+    --chart-text: hsl(240 10% 4%);
+    --chart-text-muted: hsl(240 4% 46%);
+    --chart-positive: #1baf7a;
+    --chart-negative: #e34948;
+  }
+
+  .dark {
+    /* #0F0F12 — a hair warm-blue rather than pure black, so photographs and
+       product thumbnails do not look like they are floating in a void. */
+    --background: 240 9% 6%;
+    --foreground: 0 0% 98%;
+    /* #18181B — panels lift off the ground by 4% lightness. */
+    --card: 240 6% 10%;
+    --card-foreground: 0 0% 98%;
+    /* #27272A — menus and modals lift again, so a dropdown over a card is
+       unmistakably in front of it without relying on a shadow. */
+    --popover: 240 4% 16%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 217 91% 60%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 240 4% 14%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 240 4% 14%;
+    /* Lifted from 65% → 68%: on the darker ground this is what keeps secondary
+       text at AA (4.5:1) instead of drifting just under it. */
+    --muted-foreground: 240 5% 68%;
+    --accent: 240 4% 18%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 63% 45%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 4% 18%;
+    --input: 240 4% 20%;
+    --ring: 217 91% 60%;
+
+    --hairline: rgb(255 255 255 / 0.06);
+    --hairline-strong: rgb(255 255 255 / 0.12);
+    --overlay-subtle: rgb(255 255 255 / 0.02);
+    --overlay-hover: rgb(255 255 255 / 0.05);
+
+    /* Dark steps are *selected for the dark surface*, not an automatic flip:
+       worst adjacent CVD ΔE 26.8, normal-vision ΔE 31.8, both ≥3:1 on #1a1a19.
+       The three series hexes are deliberately unchanged — that validation is the
+       reason they are what they are. Only the chrome below is retuned for the
+       new, darker ground. */
+    --chart-1: #3987e5;
+    --chart-2: #d95926;
+    --chart-3: #199e70;
+    --chart-grid: rgb(255 255 255 / 0.05);
+    --chart-axis: hsl(240 5% 42%);
+    --chart-surface: hsl(240 6% 10%);
+    --chart-text: hsl(0 0% 98%);
+    --chart-text-muted: hsl(240 5% 68%);
+    --chart-positive: #199e70;
+    --chart-negative: #e66767;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    /* Prevents iOS Safari from zooming when a 16px input is focused. */
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Myanmar Unicode needs extra line height — the script stacks diacritics
+     above and below the baseline and clips at Latin defaults. */
+  .font-myanmar,
+  [lang='my'] {
+    font-family: var(--font-myanmar), 'Padauk', 'Noto Sans Myanmar', system-ui, sans-serif;
+    line-height: 1.9;
+    word-break: break-word;
+    /* Burmese is already dense with stacked marks; the negative tracking that
+       flatters Latin display type closes counters here and hurts legibility. */
+    letter-spacing: 0;
+  }
+
+  /* Figures in tables, KPI tiles and money columns must not shift width as
+     digits change, or a live-updating total visibly jitters. */
+  .tabular-nums,
+  [class*='tabular-nums'] {
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: 'tnum' 1;
+  }
+
+  /* Latin display headings get the tighter tracking; Burmese opts out above. */
+  h1, h2, h3 {
+    letter-spacing: -0.011em;
+  }
+
+  /* Touch targets: 44px minimum on coarse pointers, per WCAG 2.5.5. */
+  @media (pointer: coarse) {
+    button,
+    [role='button'],
+    a.btn {
+      min-height: 44px;
+    }
+  }
+
+  /* Respect the user's motion preference — cheap Android devices also
+     benefit from skipping animation work. */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+/* ── Printing ──────────────────────────────────────────────────────────
+   One component (InvoiceDocument) prints two ways. `data-print-format`
+   selects the page geometry; everything outside the document is hidden. */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+
+  .invoice-document,
+  .invoice-document * {
+    visibility: visible;
+  }
+
+  .invoice-document {
+    position: absolute;
+    inset: 0 auto auto 0;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    color: #000;
+    background: #fff;
+  }
+
+  .print\:hidden {
+    display: none !important;
+  }
+
+  /* 80mm thermal roll: no margins, continuous feed. */
+  .invoice-document[data-print-format='receipt'] {
+    max-width: 80mm;
+    font-size: 11px;
+  }
+
+  /* A4 invoice for PDF / office printers. */
+  .invoice-document[data-print-format='a4'] {
+    max-width: 210mm;
+    padding: 12mm;
+  }
+
+  @page {
+    margin: 0;
+  }
+
+  tr,
+  li {
+    break-inside: avoid;
+  }
+}
+
+/* Keeps the POS grid from bouncing on iOS while the cart sheet is open. */
+.overscroll-none {
+  overscroll-behavior: none;
+}
