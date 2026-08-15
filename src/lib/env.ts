@@ -27,11 +27,11 @@ function required(name: string, value: string | undefined): string {
 }
 
 export function supabaseUrl(): string {
-  return required('NEXT_PUBLIC_SUPABASE_URL', process.env.NEXT_PUBLIC_SUPABASE_URL)
+  return process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://ktetyldwbuezpbrtorrm.supabase.co'
 }
 
 export function supabaseAnonKey(): string {
-  return required('NEXT_PUBLIC_SUPABASE_ANON_KEY', process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY)
+  return process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
 }
 
 /**
