@@ -1,15 +1,15 @@
-import { Building2 } from 'lucide-react'
+import { CompanyMark } from '@/components/brand/company-mark'
 
-/** Auth screens get no app chrome — no sidebar, no tenant, no session. */
+/**
+ * Auth screens get no app chrome — no sidebar, no tenant, no session.
+ *
+ * The company lockup lives here rather than inside each form, so login and
+ * signup cannot drift apart on branding.
+ */
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex min-h-[100dvh] flex-col items-center justify-center bg-muted/40 px-4 py-8">
-      <div className="mb-6 flex items-center gap-2">
-        <span className="flex size-9 items-center justify-center rounded-lg bg-primary">
-          <Building2 className="size-5 text-primary-foreground" />
-        </span>
-        <span className="text-lg font-semibold">Myanmar ERP</span>
-      </div>
+      <CompanyMark className="mb-6" size={64} />
 
       <div className="w-full max-w-sm">{children}</div>
 

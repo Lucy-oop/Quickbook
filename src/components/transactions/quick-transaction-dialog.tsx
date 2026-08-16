@@ -18,7 +18,7 @@ import { usePermission } from '@/hooks/use-permission'
 import { useQuickTransaction } from '@/hooks/use-checkout'
 import { useEmployees, useRecordSalary } from '@/hooks/use-employees'
 import { useI18n, localized } from '@/lib/i18n'
-import { formatDate, formatMoney, toISODate } from '@/lib/format'
+import { formatDate, formatMoney, formatNumber, toISODate } from '@/lib/format'
 import { cn, friendlyDbError } from '@/lib/utils'
 import { PAYMENT_METHODS } from '@/lib/payment-methods'
 import { CustomFieldsForm } from '@/components/custom-fields/custom-fields-form'
@@ -293,6 +293,11 @@ export function QuickTransactionDialog({ type, trigger }: Props) {
 
           {/* ── Amount: typed normally, derived for a salary ─────────────── */}
           {isSalary ? (
+            /* Not an input — the payable amount is derived, so it recomputes as
+               the three fields below change and can never be edited into
+               disagreeing with them. The working is shown because a shop owner
+               handing over cash wants to see where the number came from,
+               especially when an advance has been taken out of it. */
             <div className="rounded-md border bg-muted/40 p-3">
               <p className="text-xs text-muted-foreground">{t('payroll.net')}</p>
               <p
@@ -303,6 +308,22 @@ export function QuickTransactionDialog({ type, trigger }: Props) {
               >
                 {formatMoney(netSalary, { currency: tenant.base_currency, locale })}
               </p>
+
+              {(Number(bonusAmount) > 0 || Number(deductionAmount) > 0) && (
+                <p className="mt-1 text-right text-xs text-muted-foreground tabular-nums">
+                  {formatNumber(Number(baseAmount) || 0, 0, locale)}
+                  {Number(bonusAmount) > 0 && ` + ${formatNumber(Number(bonusAmount), 0, locale)}`}
+                  {Number(deductionAmount) > 0 && ` − ${formatNumber(Number(deductionAmount), 0, locale)}`}
+                </p>
+              )}
+
+              {/* An advance larger than the pay is a data-entry slip, not a
+                  negative wage. Saying so beats a disabled Save with no reason. */}
+              {netSalary < 0 && (
+                <p className="mt-1 text-right text-xs text-destructive">
+                  {t('payroll.negativeNet')}
+                </p>
+              )}
             </div>
           ) : (
             <div>
@@ -418,7 +439,9 @@ export function QuickTransactionDialog({ type, trigger }: Props) {
                   />
                 </div>
                 <div>
-                  <Label htmlFor="qt-deduct" className="text-xs">{t('payroll.deduction')}</Label>
+                  <Label htmlFor="qt-deduct" className="text-xs" title={t('payroll.deductionHint')}>
+                    {t('payroll.deduction')}
+                  </Label>
                   <Input
                     id="qt-deduct"
                     type="number"

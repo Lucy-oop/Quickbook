@@ -235,11 +235,12 @@ export function AppShell({ tenants, children }: { tenants: TenantOption[]; child
 /**
  * A nav row.
  *
- * Active state is carried three ways — tinted fill, blue text, and a left rule —
- * because a tint alone is too quiet on a dark ground and colour alone fails
- * anyone who cannot distinguish it. `gap-3` fixes 12px between icon and label so
- * Burmese and English rows align identically despite Burmese sitting on a taller
- * line box.
+ * Active state is a filled pill — no left rule, no ring. Weight and foreground
+ * colour carry it alongside the fill, so the cue does not rest on colour alone
+ * for anyone who cannot distinguish it.
+ *
+ * `gap-3` fixes 12px between icon and label so Burmese and English rows align
+ * identically despite Burmese sitting on a taller line box.
  */
 function NavLink({
   item, pathname, label, collapsed = false,
@@ -257,19 +258,17 @@ function NavLink({
       aria-current={active ? 'page' : undefined}
       title={collapsed ? label : undefined}
       className={cn(
-        'my-1 flex items-center gap-3 rounded-lg text-sm transition-colors',
-        collapsed ? 'justify-center px-2 py-2.5' : 'border-l-2 px-3.5 py-2.5',
+        'my-1 flex items-center gap-3 rounded-lg text-sm transition-colors duration-200',
+        collapsed ? 'justify-center px-2 py-2.5' : 'px-3.5 py-2.5',
         active
-          ? cn('bg-primary/[0.14] font-medium text-primary', !collapsed && 'border-primary')
-          : cn(
-              'text-muted-foreground hover:bg-overlay-hover hover:text-foreground',
-              // Always present, transparent when inactive — a border that only
-              // appears on activation shifts the label 2px sideways.
-              !collapsed && 'border-transparent',
-            ),
+          // `bg-accent` rather than a literal slate: it is already the token for
+          // "raised, selected surface" in both themes, so this stays correct in
+          // light mode instead of turning into a dark block.
+          ? 'bg-accent font-medium text-accent-foreground'
+          : 'text-muted-foreground hover:bg-overlay-hover hover:text-foreground',
       )}
     >
-      <item.icon className="size-4 shrink-0" aria-hidden />
+      <item.icon className={cn('size-4 shrink-0', active && 'text-primary')} aria-hidden />
       {!collapsed && <span className="truncate">{label}</span>}
     </Link>
   )

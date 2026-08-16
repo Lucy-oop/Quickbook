@@ -7,6 +7,7 @@ import { Loader2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
+import { PasswordInput } from '@/components/ui/password-input'
 import { Label } from '@/components/ui/label'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { toast } from 'sonner'
@@ -179,14 +180,15 @@ export function SignupForm() {
               </div>
               <div>
                 <Label htmlFor="signup-password">Password</Label>
-                <Input
+                <PasswordInput
                   id="signup-password"
-                  type="password"
                   autoComplete="new-password"
                   minLength={8}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="h-12"
+                  showLabel="စကားဝှက် ပြရန်"
+                  hideLabel="စကားဝှက် ဖုံးရန်"
                   required
                 />
                 <p className="mt-1 text-xs text-muted-foreground">အနည်းဆုံး ၈ လုံး</p>

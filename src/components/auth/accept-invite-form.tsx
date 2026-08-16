@@ -7,6 +7,7 @@ import { AlertCircle, Loader2, Mail } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
+import { PasswordInput } from '@/components/ui/password-input'
 import { Label } from '@/components/ui/label'
 import { Badge } from '@/components/ui/badge'
 import { toast } from 'sonner'
@@ -258,14 +259,15 @@ export function AcceptInviteForm({
 
           <div>
             <Label htmlFor="ai-password">စကားဝှက် / Password</Label>
-            <Input
+            <PasswordInput
               id="ai-password"
-              type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="h-12"
               autoComplete="new-password"
               disabled={loading}
+              showLabel="စကားဝှက် ပြရန်"
+              hideLabel="စကားဝှက် ဖုံးရန်"
               required
             />
             <p className={tooShort ? 'mt-1 text-xs text-destructive' : 'mt-1 text-xs text-muted-foreground'}>
@@ -275,14 +277,15 @@ export function AcceptInviteForm({
 
           <div>
             <Label htmlFor="ai-confirm">စကားဝှက် အတည်ပြုပါ / Confirm password</Label>
-            <Input
+            <PasswordInput
               id="ai-confirm"
-              type="password"
               value={confirm}
               onChange={(e) => setConfirm(e.target.value)}
               className="h-12"
               autoComplete="new-password"
               disabled={loading}
+              showLabel="စကားဝှက် ပြရန်"
+              hideLabel="စကားဝှက် ဖုံးရန်"
               required
             />
             {mismatch && (
