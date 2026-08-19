@@ -220,3 +220,39 @@
 .overscroll-none {
   overscroll-behavior: none;
 }
+
+/* ── Horizontal scroll for wide tables ─────────────────────────────────
+   A data table that scrolls sideways needs two things a plain
+   `overflow-x-auto` does not give you: a scrollbar you can actually grab on a
+   trackpad, and some sign that there IS more to the right. Overlay scrollbars
+   on macOS/iOS stay hidden until you scroll, so without this the extra columns
+   are simply invisible.
+
+   `scrollbar-gutter: stable` reserves the track so the table does not shift
+   sideways by a few pixels the moment a scrollbar appears. */
+.table-scroll {
+  overflow-x: auto;
+  scrollbar-gutter: stable;
+  /* Firefox */
+  scrollbar-width: thin;
+  scrollbar-color: hsl(var(--muted-foreground) / 0.35) transparent;
+  /* Momentum scrolling on iOS. */
+  -webkit-overflow-scrolling: touch;
+}
+
+.table-scroll::-webkit-scrollbar {
+  height: 8px;
+}
+
+.table-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.table-scroll::-webkit-scrollbar-thumb {
+  background-color: hsl(var(--muted-foreground) / 0.3);
+  border-radius: 9999px;
+}
+
+.table-scroll:hover::-webkit-scrollbar-thumb {
+  background-color: hsl(var(--muted-foreground) / 0.5);
+}

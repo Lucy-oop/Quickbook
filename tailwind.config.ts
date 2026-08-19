@@ -46,6 +46,32 @@ const config: Config = {
         md: 'calc(var(--radius) - 2px)',
         sm: 'calc(var(--radius) - 4px)',
       },
+      /**
+       * Gesture-bar clearance.
+       *
+       * `max()` rather than the raw inset: on a desktop browser or an older phone
+       * `env(safe-area-inset-bottom)` resolves to 0, and a bare inset would leave
+       * a CTA flush against the viewport edge. The floor keeps ordinary padding
+       * everywhere and grows only where the OS reserves space.
+       *
+       * Only works because the root layout sets `viewportFit: 'cover'`; without
+       * it iOS reports every inset as 0.
+       */
+      padding: {
+        'safe-b': 'max(2rem, env(safe-area-inset-bottom))',
+        'safe-b-sm': 'max(1rem, env(safe-area-inset-bottom))',
+        /** Just the inset, no floor — for bars that already have their own padding. */
+        'safe-b-0': 'env(safe-area-inset-bottom)',
+        'safe-t': 'env(safe-area-inset-top)',
+      },
+      /**
+       * Clearance for content sitting above the fixed mobile tab bar.
+       * 56px bar + whatever the OS reserves below it.
+       */
+      spacing: {
+        'nav-b': 'calc(3.5rem + env(safe-area-inset-bottom))',
+        'nav-b-fab': 'calc(4.5rem + env(safe-area-inset-bottom))',
+      },
       keyframes: {
         'accordion-down': { from: { height: '0' }, to: { height: 'var(--radix-accordion-content-height)' } },
         'accordion-up': { from: { height: 'var(--radix-accordion-content-height)' }, to: { height: '0' } },

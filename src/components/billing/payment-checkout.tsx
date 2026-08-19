@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import {
   AlertTriangle, ArrowLeft, Building2, Check, Copy, CreditCard, Globe, Headphones,
-  Loader2, MapPin, Phone, QrCode, Smartphone, Upload, X,
+  Loader2, MapPin, Phone, Smartphone, Upload, X,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -24,7 +24,9 @@ import { friendlyDbError, cn } from '@/lib/utils'
 import { monthlyEquivalent, planName, type Plan } from '@/lib/plans'
 import {
   BANK_ACCOUNTS, BILLING_ACCOUNTS_CONFIGURED, COMPANY, PAYMENT_CHANNELS, WALLET_ACCOUNTS,
+  missingBillingConfig,
 } from '@/lib/billing-accounts'
+import { QrPlaceholder } from '@/components/billing/qr-placeholder'
 
 const MAX_SLIP_BYTES = 5 * 1024 * 1024
 const ACCEPTED = ['image/jpeg', 'image/png', 'image/webp', 'image/heic', 'application/pdf']
@@ -41,7 +43,7 @@ export function PaymentCheckout({ plan }: { plan: Plan }) {
   const { tenant } = useSession()
   const router = useRouter()
 
-  const [method, setMethod] = useState<string>(WALLET_ACCOUNTS[0]?.id ?? 'kbz_pay')
+  const [method, setMethod] = useState<string>(PAYMENT_CHANNELS[0]?.value ?? 'other')
   const [senderName, setSenderName] = useState('')
   const [txRef, setTxRef] = useState('')
   const [slip, setSlip] = useState<File | null>(null)
@@ -142,10 +144,21 @@ export function PaymentCheckout({ plan }: { plan: Plan }) {
         </Link>
       </Button>
 
+      {/* Disappears on its own: BILLING_ACCOUNTS_CONFIGURED is derived from the
+          env values actually present, not a flag anyone has to remember to flip.
+          The missing-key list is development-only — a customer needs to know to
+          call, not which variable is unset. */}
       {!BILLING_ACCOUNTS_CONFIGURED && (
         <div className="mb-4 flex items-start gap-2 rounded-lg border border-amber-500/20 bg-amber-500/10 p-3 text-sm text-amber-800 dark:text-amber-300">
           <AlertTriangle className="mt-0.5 size-4 shrink-0" aria-hidden />
-          <span>{t('billing.accountsNotConfigured')}</span>
+          <div className="min-w-0">
+            <p>{t('billing.accountsNotConfigured')}</p>
+            {process.env.NODE_ENV !== 'production' && (
+              <p className="mt-1 font-mono text-xs opacity-80">
+                missing: {missingBillingConfig().join(', ')}
+              </p>
+            )}
+          </div>
         </div>
       )}
 
@@ -161,13 +174,17 @@ export function PaymentCheckout({ plan }: { plan: Plan }) {
           <div className="min-w-0 flex-1 space-y-1">
             <p className="font-semibold leading-tight">{COMPANY.name}</p>
 
-            <a
-              href={`tel:${COMPANY.phone.replace(/[^\d+]/g, '')}`}
-              className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground"
-            >
-              <Phone className="size-3.5 shrink-0" aria-hidden />
-              <span className="truncate">{COMPANY.phone}</span>
-            </a>
+            {/* Rendered only when set — an empty `tel:` link is a dead target
+                that still looks tappable. */}
+            {COMPANY.phone && (
+              <a
+                href={`tel:${COMPANY.phone.replace(/[^\d+]/g, '')}`}
+                className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground"
+              >
+                <Phone className="size-3.5 shrink-0" aria-hidden />
+                <span className="truncate">{COMPANY.phone}</span>
+              </a>
+            )}
 
             {COMPANY.altPhone && (
               <a
@@ -179,10 +196,12 @@ export function PaymentCheckout({ plan }: { plan: Plan }) {
               </a>
             )}
 
-            <p className="flex items-start gap-1.5 text-sm text-muted-foreground">
-              <MapPin className="mt-0.5 size-3.5 shrink-0" aria-hidden />
-              <span>{COMPANY.address}</span>
-            </p>
+            {COMPANY.address && (
+              <p className="flex items-start gap-1.5 text-sm text-muted-foreground">
+                <MapPin className="mt-0.5 size-3.5 shrink-0" aria-hidden />
+                <span>{COMPANY.address}</span>
+              </p>
+            )}
 
             {COMPANY.website && (
               <a
@@ -241,6 +260,11 @@ export function PaymentCheckout({ plan }: { plan: Plan }) {
             </TabsList>
 
             <TabsContent value="wallet" className="mt-3 space-y-3">
+              {!WALLET_ACCOUNTS.length && (
+                <p className="py-6 text-center text-sm text-muted-foreground">
+                  {t('billing.noChannel')}
+                </p>
+              )}
               {WALLET_ACCOUNTS.map((w) => (
                 <div key={w.id} className="rounded-lg border border-hairline p-3">
                   <div className="mb-2 flex items-center justify-between gap-2">
@@ -252,14 +276,13 @@ export function PaymentCheckout({ plan }: { plan: Plan }) {
                   <div className="mt-3 flex items-center gap-3">
                     {w.qrImage ? (
                       // eslint-disable-next-line @next/next/no-img-element
-                      <img src={w.qrImage} alt={`${w.labelEn} QR`} className="size-28 rounded-md border border-hairline" />
+                      <img
+                        src={w.qrImage}
+                        alt={`${w.labelEn} QR`}
+                        className="size-28 rounded-md border border-hairline"
+                      />
                     ) : (
-                      <div className="flex size-28 flex-col items-center justify-center gap-1 rounded-md border border-dashed border-hairline-strong text-center">
-                        <QrCode className="size-6 text-muted-foreground" aria-hidden />
-                        <span className="px-1 text-[10px] leading-tight text-muted-foreground">
-                          {t('billing.qrPlaceholder')}
-                        </span>
-                      </div>
+                      <QrPlaceholder size={112} label={t('billing.qrPlaceholder')} />
                     )}
                     <p className="flex-1 text-xs leading-relaxed text-muted-foreground">
                       {t('billing.qrHint')}
@@ -270,6 +293,11 @@ export function PaymentCheckout({ plan }: { plan: Plan }) {
             </TabsContent>
 
             <TabsContent value="bank" className="mt-3 space-y-3">
+              {!BANK_ACCOUNTS.length && (
+                <p className="py-6 text-center text-sm text-muted-foreground">
+                  {t('billing.noChannel')}
+                </p>
+              )}
               {BANK_ACCOUNTS.map((b) => (
                 <div key={b.id} className="rounded-lg border border-hairline p-3">
                   <div className="mb-2 flex items-center justify-between gap-2">
@@ -290,16 +318,18 @@ export function PaymentCheckout({ plan }: { plan: Plan }) {
           tel: link so it is never a dead button. */}
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3 rounded-lg border border-hairline bg-overlay-subtle px-4 py-3">
         <p className="text-sm text-muted-foreground">{t('billing.needHelp')}</p>
-        <Button asChild variant="outline" size="sm" className="gap-1.5">
-          <a
-            href={COMPANY.supportUrl ?? `tel:${COMPANY.phone.replace(/[^\d+]/g, '')}`}
-            target={COMPANY.supportUrl ? '_blank' : undefined}
-            rel={COMPANY.supportUrl ? 'noreferrer noopener' : undefined}
-          >
-            <Headphones className="size-3.5" aria-hidden />
-            {localized(locale, COMPANY.supportLabelEn, COMPANY.supportLabelMy)}
-          </a>
-        </Button>
+        {(COMPANY.supportUrl || COMPANY.phone) && (
+          <Button asChild variant="outline" size="sm" className="gap-1.5">
+            <a
+              href={COMPANY.supportUrl ?? `tel:${COMPANY.phone.replace(/[^\d+]/g, '')}`}
+              target={COMPANY.supportUrl ? '_blank' : undefined}
+              rel={COMPANY.supportUrl ? 'noreferrer noopener' : undefined}
+            >
+              <Headphones className="size-3.5" aria-hidden />
+              {localized(locale, COMPANY.supportLabelEn, COMPANY.supportLabelMy)}
+            </a>
+          </Button>
+        )}
       </div>
 
       {/* ── 3. Prove it ─────────────────────────────────────────────────── */}

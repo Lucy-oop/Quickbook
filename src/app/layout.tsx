@@ -28,9 +28,12 @@ export const viewport: Viewport = {
   // Zoom stays enabled — pinch-to-zoom is an accessibility requirement, and
   // shop owners routinely zoom into receipt figures.
   maximumScale: 5,
+  // Matches --background in globals.css. The dark value drifted when the
+  // surface palette moved to #0F0F12, leaving a visible seam between the browser
+  // chrome and the page on mobile.
   themeColor: [
     { media: '(prefers-color-scheme: light)', color: '#ffffff' },
-    { media: '(prefers-color-scheme: dark)', color: '#0a0a0b' },
+    { media: '(prefers-color-scheme: dark)', color: '#0f0f12' },
   ],
   viewportFit: 'cover',
 }

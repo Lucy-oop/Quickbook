@@ -201,12 +201,16 @@ export function SignupForm() {
           </TabsContent>
         </Tabs>
 
-        <p className="mt-4 text-center text-sm text-muted-foreground">
-          အကောင့်ရှိပြီးသားလား?{' '}
-          <Link href="/login" className="font-medium text-primary hover:underline">
-            ဝင်ရောက်မည်
-          </Link>
-        </p>
+        {/* Mirrors the login screen: solid primary above, outlined secondary here.
+            a11y: h-11 clears the 44px minimum for coarse pointers (WCAG 2.5.5). */}
+        <div className="mt-5 border-t border-hairline pt-4">
+          <p className="mb-2 text-center text-sm text-muted-foreground">
+            အကောင့်ရှိပြီးသားလား?
+          </p>
+          <Button asChild variant="outline" className="h-11 w-full">
+            <Link href="/login">ဝင်ရောက်မည် / Log in</Link>
+          </Button>
+        </div>
       </CardContent>
     </Card>
   )

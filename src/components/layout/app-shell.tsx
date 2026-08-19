@@ -85,7 +85,7 @@ export function AppShell({ tenants, children }: { tenants: TenantOption[]; child
           meaningful slice of a 1024px screen but the nav is still wanted. */}
       <aside
         className={cn(
-          'hidden shrink-0 flex-col border-r border-hairline bg-card transition-[width] duration-200 md:flex',
+          'hidden shrink-0 flex-col border-r border-hairline bg-card transition-[width] duration-200 lg:flex',
           collapsed ? 'w-[68px]' : 'w-60',
         )}
       >
@@ -151,10 +151,10 @@ export function AppShell({ tenants, children }: { tenants: TenantOption[]; child
       <div className="flex min-w-0 flex-1 flex-col">
         {/* The blur needs a translucent ground to read at all; supports-* keeps a
             solid fallback where backdrop-filter is unavailable. */}
-        <header className="sticky top-0 z-30 flex h-14 items-center gap-2 border-b border-hairline bg-background/80 px-3 backdrop-blur-md supports-[not(backdrop-filter:blur(0))]:bg-background">
+        <header className="sticky top-0 z-30 flex h-14 items-center gap-2 border-b border-hairline bg-background/80 px-3 pt-safe-t backdrop-blur-md supports-[not(backdrop-filter:blur(0))]:bg-background">
           <Sheet>
             <SheetTrigger asChild>
-              <Button size="icon" variant="ghost" aria-label="Menu" className="md:hidden">
+              <Button size="icon" variant="ghost" aria-label="Menu" className="lg:hidden">
                 <Menu className="size-5" />
               </Button>
             </SheetTrigger>
@@ -173,11 +173,11 @@ export function AppShell({ tenants, children }: { tenants: TenantOption[]; child
             </SheetContent>
           </Sheet>
 
-          <span className="truncate font-semibold md:hidden">{tenant.name}</span>
+          <span className="truncate font-semibold lg:hidden">{tenant.name}</span>
 
           {/* min-h reserves the row so filling `stamp` in after mount does not
               shift the header. */}
-          <div className="hidden min-h-5 items-center gap-2 md:flex">
+          <div className="hidden min-h-5 items-center gap-2 lg:flex">
             {stamp && (
               <span className="inline-flex items-center gap-2 rounded-lg border border-hairline bg-overlay-subtle px-2.5 py-1 text-xs text-muted-foreground">
                 <CalendarDays className="size-3.5 shrink-0" aria-hidden />
@@ -205,10 +205,10 @@ export function AppShell({ tenants, children }: { tenants: TenantOption[]; child
           </div>
         </header>
 
-        <main className="min-w-0 flex-1 pb-16 md:pb-0">{children}</main>
+        <main className="min-w-0 flex-1 pb-nav-b lg:pb-0">{children}</main>
 
         {/* ── Mobile bottom tabs ───────────────────────────────────────── */}
-        <nav className="fixed inset-x-0 bottom-0 z-30 grid grid-cols-4 border-t bg-background/95 backdrop-blur md:hidden">
+        <nav className="fixed inset-x-0 bottom-0 z-30 grid grid-cols-4 border-t border-hairline bg-background/95 pb-safe-b-0 backdrop-blur lg:hidden">
           {primary.map((item) => {
             const active = pathname.startsWith(item.href)
             return (

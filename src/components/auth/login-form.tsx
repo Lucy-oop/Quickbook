@@ -191,12 +191,18 @@ export function LoginForm() {
           </TabsContent>
         </Tabs>
 
-        <p className="mt-4 text-center text-sm text-muted-foreground">
-          အကောင့်မရှိသေးဘူးလား?{' '}
-          <Link href="/signup" className="font-medium text-primary hover:underline">
-            အကောင့်ဖွင့်မည်
-          </Link>
-        </p>
+        {/* Secondary action as an OUTLINED button, not a text link: it reads as
+            clearly subordinate to the solid primary above while still being a
+            44px+ target. A 14px inline link is neither.
+            a11y: h-11 clears the 44px minimum for coarse pointers (WCAG 2.5.5). */}
+        <div className="mt-5 border-t border-hairline pt-4">
+          <p className="mb-2 text-center text-sm text-muted-foreground">
+            အကောင့်မရှိသေးဘူးလား?
+          </p>
+          <Button asChild variant="outline" className="h-11 w-full">
+            <Link href="/signup">အကောင့်ဖွင့်မည် / Create account</Link>
+          </Button>
+        </div>
       </CardContent>
     </Card>
   )

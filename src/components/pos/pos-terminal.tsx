@@ -290,7 +290,7 @@ export function PosTerminal() {
       </aside>
 
       {/* ── Cart: bottom bar + sheet on mobile ─────────────────────────── */}
-      <div className="border-t border-hairline bg-background p-3 lg:hidden">
+      <div className="border-t border-hairline bg-background p-3 pb-safe-b-sm lg:hidden">
         <Sheet open={cartOpen} onOpenChange={setCartOpen}>
           <SheetTrigger asChild>
             <Button size="lg" className="h-14 w-full justify-between text-base" disabled={!totals.itemCount}>

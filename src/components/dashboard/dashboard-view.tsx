@@ -55,7 +55,7 @@ export function DashboardView() {
   const money = (v: number | undefined | null) => formatMoney(v ?? 0, { currency, locale })
 
   return (
-    <div className="space-y-4 pb-24 md:pb-6">
+    <div className="space-y-4 pb-4 lg:pb-6">
       <TrialBanner />
 
       {/* ── Header ─────────────────────────────────────────────────────── */}
@@ -425,7 +425,7 @@ export function DashboardView() {
         <Button
           asChild
           size="icon"
-          className="fixed bottom-20 right-4 z-40 size-14 rounded-full shadow-lg md:hidden"
+          className="fixed bottom-nav-b-fab right-4 z-40 size-14 rounded-full shadow-lg lg:hidden"
           aria-label={t('dashboard.quickSale')}
         >
           <Link href="/pos">

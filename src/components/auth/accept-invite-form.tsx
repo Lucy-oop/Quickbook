@@ -14,6 +14,7 @@ import { toast } from 'sonner'
 
 import { getSupabaseBrowserClient } from '@/lib/supabase/client'
 import { useI18n, localized } from '@/lib/i18n'
+import { cn } from '@/lib/utils'
 
 interface Props {
   token: string
@@ -229,7 +230,7 @@ export function AcceptInviteForm({
       </CardHeader>
 
       <CardContent>
-        <form onSubmit={submit} className="space-y-4">
+        <form onSubmit={submit} className="space-y-5">
           {/* Read-only, and disabled so it is not submitted or autofilled over. */}
           <div>
             <Label htmlFor="ai-email">အီးမေးလ် / Email</Label>
@@ -270,7 +271,15 @@ export function AcceptInviteForm({
               hideLabel="စကားဝှက် ဖုံးရန်"
               required
             />
-            <p className={tooShort ? 'mt-1 text-xs text-destructive' : 'mt-1 text-xs text-muted-foreground'}>
+            {/* mt-1.5 + leading-relaxed: at mt-1 this hint collided with the
+                "Confirm password" label below, because Burmese descenders and the
+                label's ascenders overlap at that line-height. */}
+            <p
+              className={cn(
+                'mt-1.5 text-xs leading-relaxed',
+                tooShort ? 'text-destructive' : 'text-muted-foreground',
+              )}
+            >
               အနည်းဆုံး ၈ လုံး / At least 8 characters
             </p>
           </div>

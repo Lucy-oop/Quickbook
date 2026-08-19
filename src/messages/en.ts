@@ -153,6 +153,7 @@ export const en = {
   'billing.slipDeclined': 'Your payment slip was declined',
   'billing.declinedHint': 'Fix the issue above and submit again. Contact the admin team if you need help.',
   'billing.needHelp': 'Having trouble with your transfer?',
+  'billing.noChannel': 'No payment accounts configured yet.',
   'billing.pendingReview': 'Payment verification in progress. We will confirm once approved.',
   'billing.backToPlans': 'Back to plans',
   'billing.orderSummary': 'Order summary',

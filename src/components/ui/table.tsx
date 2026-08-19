@@ -3,8 +3,11 @@ import { cn } from '@/lib/utils'
 
 const Table = React.forwardRef<HTMLTableElement, React.HTMLAttributes<HTMLTableElement>>(
   ({ className, ...props }, ref) => (
-    // Wide tables scroll inside their own container; the page never scrolls sideways.
-    <div className="relative w-full overflow-x-auto">
+    // Wide tables scroll inside their own container; the page never scrolls
+    // sideways. `.table-scroll` (globals.css) supplies a visible, grabbable
+    // scrollbar — macOS overlay scrollbars hide until you scroll, which makes
+    // off-screen columns undiscoverable on a laptop.
+    <div className="table-scroll relative w-full">
       <table ref={ref} className={cn('w-full caption-bottom text-sm', className)} {...props} />
     </div>
   ),
